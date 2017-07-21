@@ -80,7 +80,8 @@
         MMNotificationModel *observerModel = (MMNotificationModel *)obj;
         id observer = observerModel.observer;
         SEL selector = observerModel.selector;
-        if (!observer && !observerModel.block) {//
+        // 失效通知检查
+        if (!observer && !observerModel.block) {// 没有观察者&&没有实现block，那么认为这个通知已经失效
             [notiArray removeObject:observerModel];
             [_cacheDict setObject:notiArray forKey:name];
             // 此处的 return 是结束此次循环，进行下一次，类似于 for 和 while 中的 continue 一样
@@ -90,7 +91,9 @@
         void (^postBlock)() = ^{
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Warc-performSelector-leaks"
-            [observer performSelector:selector withObject:notification];
+            if (observer) {
+                [observer performSelector:selector withObject:notification];
+            }
             if (observerModel.block) {
                 observerModel.block(notification);
             }
@@ -127,7 +130,8 @@
     [self postNotification:model];
 }
 
-#pragma mark - 移除 （数据结构待优化）
+#pragma mark - 移除 
+// 这种移除方式的数据结构有待优化，此处的时间复杂度较高，暂时没有想到更好的方法。
 - (void)removeObserver:(id)observer
 {
     if (!observer) return;

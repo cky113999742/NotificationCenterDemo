@@ -57,8 +57,6 @@
 
 - (void)back
 {
-    // 如果不调用，即使 NextView 被释放，通知的回调还是会存在
-    [_nextView viewWillDealloc];
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 

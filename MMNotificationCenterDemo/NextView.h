@@ -10,6 +10,4 @@
 
 @interface NextView : UIView
 
-- (void)viewWillDealloc;
-
 @end

@@ -21,6 +21,7 @@ static int flag = 0;
 
 - (void)dealloc
 {
+    [self viewWillDealloc];
     NSLog(@"%s", __func__);
 }
 
